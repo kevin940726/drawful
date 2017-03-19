@@ -1,5 +1,5 @@
 import React, { PureComponent } from 'react';
-import { GithubPicker } from 'react-color';
+import { TwitterPicker } from 'react-color';
 import './App.css';
 
 class Drawful extends PureComponent {
@@ -7,19 +7,20 @@ class Drawful extends PureComponent {
     now: 0,
     history: [''],
     color: '#b80000',
+    size: 3,
   };
 
   componentDidMount() {
     const canvas = this.ref;
     this.ctx = canvas.getContext('2d');
 
-    this.ctx.lineWidth = 3;
     this.ctx.lineJoin = 'round';
     this.ctx.lineCap = 'round';
   }
 
   handleMouseMove = (e) => {
     if (this.isMouseDown) {
+      this.ctx.lineWidth = this.state.size;
       this.ctx.strokeStyle = this.state.color;
 
       const mouse = {
@@ -118,6 +119,12 @@ class Drawful extends PureComponent {
     this.handleMouseUp();
   }
 
+  handleSizeChange = (e) => {
+    this.setState({
+      size: +e.target.value,
+    });
+  }
+
   ref = null;
   ctx = null;
   mouse = {
@@ -127,14 +134,15 @@ class Drawful extends PureComponent {
   isMouseDown = false;
 
   render() {
-    const { now, history, color } = this.state;
+    const { now, history, color, size } = this.state;
 
     return (
       <div>
         <button disabled={now <= 0} onClick={this.undo}>undo</button>
         <button disabled={now >= history.length - 1} onClick={this.redo}>redo</button>
         <button onClick={this.clear}>clear</button>
-        <GithubPicker
+        <input type="range" min="2" max="22" onChange={this.handleSizeChange} value={size} />
+        <TwitterPicker
           color={color}
           onChangeComplete={this.handleColorChange}
         />
