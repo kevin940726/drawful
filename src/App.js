@@ -1,10 +1,12 @@
 import React, { PureComponent } from 'react';
+import { GithubPicker } from 'react-color';
 import './App.css';
 
 class Drawful extends PureComponent {
   state = {
     now: 0,
     history: [''],
+    color: '#b80000',
   };
 
   componentDidMount() {
@@ -14,36 +16,39 @@ class Drawful extends PureComponent {
     this.ctx.lineWidth = 3;
     this.ctx.lineJoin = 'round';
     this.ctx.lineCap = 'round';
-    this.ctx.strokeStyle = this.color;
   }
 
   handleMouseMove = (e) => {
     if (this.isMouseDown) {
+      this.ctx.strokeStyle = this.state.color;
+
+      const mouse = {
+        x: e.pageX - this.ref.offsetLeft,
+        y: e.pageY - this.ref.offsetTop,
+      };
+
       this.ctx.globalAlpha = 1;
       this.ctx.moveTo(this.mouse.x, this.mouse.y);
-      this.ctx.lineTo(e.clientX, e.clientY);
+      this.ctx.lineTo(mouse.x, mouse.y);
       this.ctx.stroke();
       
       this.ctx.moveTo(this.mouse.x - 4, this.mouse.y - 4);
-      this.ctx.lineTo(e.clientX - 4, e.clientY - 4);
+      this.ctx.lineTo(mouse.x - 4, mouse.y - 4);
       this.ctx.stroke();
       
       this.ctx.moveTo(this.mouse.x - 2, this.mouse.y - 2);
-      this.ctx.lineTo(e.clientX - 2, e.clientY - 2);
+      this.ctx.lineTo(mouse.x - 2, mouse.y - 2);
       this.ctx.stroke();
       
       this.ctx.moveTo(this.mouse.x + 2, this.mouse.y + 2);
-      this.ctx.lineTo(e.clientX + 2, e.clientY + 2);
+      this.ctx.lineTo(mouse.x + 2, mouse.y + 2);
       this.ctx.stroke();
       
       this.ctx.moveTo(this.mouse.x + 4, this.mouse.y + 4);
-      this.ctx.lineTo(e.clientX + 4, e.clientY + 4);
+      this.ctx.lineTo(mouse.x + 4, mouse.y + 4);
       this.ctx.stroke();
 
-      this.mouse = {
-        x: e.clientX,
-        y: e.clientY,
-      }
+      this.mouse = mouse;
     }
   }
 
@@ -52,8 +57,8 @@ class Drawful extends PureComponent {
     this.isMouseDown = true;
 
     this.mouse = {
-      x: e.clientX,
-      y: e.clientY,
+      x: e.pageX - this.ref.offsetLeft,
+      y: e.pageY - this.ref.offsetTop,
     }
   }
 
@@ -64,6 +69,12 @@ class Drawful extends PureComponent {
       history: [...history.slice(0, now + 1), this.ref.toDataURL("image/png")],
       now: now + 1,
     }));
+  }
+
+  handleColorChange = (color) => {
+    this.setState({
+      color: color.hex,
+    });
   }
 
   refCallback = (ref) => {
@@ -109,15 +120,18 @@ class Drawful extends PureComponent {
     y: 0,
   };
   isMouseDown = false;
-  color = '#FF9800';
 
   render() {
-    const { now, history } = this.state;
+    const { now, history, color } = this.state;
 
     return (
       <div>
         <button disabled={now <= 0} onClick={this.undo}>undo</button>
         <button disabled={now >= history.length - 1} onClick={this.redo}>redo</button>
+        <GithubPicker
+          color={color}
+          onChangeComplete={this.handleColorChange}
+        />
         <canvas
           width={window.innerWidth}
           height={window.innerHeight}
