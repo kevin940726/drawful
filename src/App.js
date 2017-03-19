@@ -113,6 +113,11 @@ class Drawful extends PureComponent {
     });
   }
 
+  clear = () => {
+    this.ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
+    this.handleMouseUp();
+  }
+
   ref = null;
   ctx = null;
   mouse = {
@@ -128,6 +133,7 @@ class Drawful extends PureComponent {
       <div>
         <button disabled={now <= 0} onClick={this.undo}>undo</button>
         <button disabled={now >= history.length - 1} onClick={this.redo}>redo</button>
+        <button onClick={this.clear}>clear</button>
         <GithubPicker
           color={color}
           onChangeComplete={this.handleColorChange}
