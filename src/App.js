@@ -14,23 +14,47 @@ class Drawful extends PureComponent {
     this.ctx.lineWidth = 3;
     this.ctx.lineJoin = 'round';
     this.ctx.lineCap = 'round';
-    this.ctx.strokeStyle = '#000';
+    this.ctx.strokeStyle = this.color;
   }
 
   handleMouseMove = (e) => {
-    this.mouseX = e.pageX - this.ref.offsetLeft;
-    this.mouseY = e.pageY - this.ref.offsetTop;
-    
     if (this.isMouseDown) {
-      this.ctx.lineTo(this.mouseX, this.mouseY);
+      this.ctx.globalAlpha = 1;
+      this.ctx.moveTo(this.mouse.x, this.mouse.y);
+      this.ctx.lineTo(e.clientX, e.clientY);
       this.ctx.stroke();
+      
+      this.ctx.moveTo(this.mouse.x - 4, this.mouse.y - 4);
+      this.ctx.lineTo(e.clientX - 4, e.clientY - 4);
+      this.ctx.stroke();
+      
+      this.ctx.moveTo(this.mouse.x - 2, this.mouse.y - 2);
+      this.ctx.lineTo(e.clientX - 2, e.clientY - 2);
+      this.ctx.stroke();
+      
+      this.ctx.moveTo(this.mouse.x + 2, this.mouse.y + 2);
+      this.ctx.lineTo(e.clientX + 2, e.clientY + 2);
+      this.ctx.stroke();
+      
+      this.ctx.moveTo(this.mouse.x + 4, this.mouse.y + 4);
+      this.ctx.lineTo(e.clientX + 4, e.clientY + 4);
+      this.ctx.stroke();
+
+      this.mouse = {
+        x: e.clientX,
+        y: e.clientY,
+      }
     }
   }
 
-  handleMouseDown = () => {
+  handleMouseDown = (e) => {
     this.ctx.beginPath();
-    this.ctx.moveTo(this.mouseX, this.mouseY);
     this.isMouseDown = true;
+
+    this.mouse = {
+      x: e.clientX,
+      y: e.clientY,
+    }
   }
 
   handleMouseUp = () => {
@@ -80,9 +104,12 @@ class Drawful extends PureComponent {
 
   ref = null;
   ctx = null;
-  mouseX = 0;
-  mouseY = 0;
+  mouse = {
+    x: 0,
+    y: 0,
+  };
   isMouseDown = false;
+  color = '#FF9800';
 
   render() {
     const { now, history } = this.state;
