@@ -32,21 +32,13 @@ class Drawful extends PureComponent {
       this.ctx.moveTo(this.mouse.x, this.mouse.y);
       this.ctx.lineTo(mouse.x, mouse.y);
       this.ctx.stroke();
-      
-      this.ctx.moveTo(this.mouse.x - 4, this.mouse.y - 4);
-      this.ctx.lineTo(mouse.x - 4, mouse.y - 4);
-      this.ctx.stroke();
-      
+
       this.ctx.moveTo(this.mouse.x - 2, this.mouse.y - 2);
       this.ctx.lineTo(mouse.x - 2, mouse.y - 2);
       this.ctx.stroke();
-      
+
       this.ctx.moveTo(this.mouse.x + 2, this.mouse.y + 2);
       this.ctx.lineTo(mouse.x + 2, mouse.y + 2);
-      this.ctx.stroke();
-      
-      this.ctx.moveTo(this.mouse.x + 4, this.mouse.y + 4);
-      this.ctx.lineTo(mouse.x + 4, mouse.y + 4);
       this.ctx.stroke();
 
       this.mouse = mouse;
